@@ -1,9 +1,14 @@
 import { Component } from 'react';
 import './randomChar.scss';
 import mjolnir from '../../resources/img/mjolnir.png';
-import MarvelService from './services/MarvelService';
+import MarvelService from '../../services/MarvelService';
 
 class RandomChar extends Component {
+    constructor(props) {
+        super(props);
+        this.updateChar();
+    }
+
     state = {
         name: null,
         description: null,
@@ -15,11 +20,11 @@ class RandomChar extends Component {
     marvelService = new MarvelService();
 
     updateChar = () => {
-        const id = 1011005;
+        const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
         this.marvelService
         .getCharacters(id)
         .then(res => {
-            
+            this.setState(res)
         })
     }
 
@@ -55,7 +60,7 @@ class RandomChar extends Component {
                         Or choose another one
                     </p>
                     <button className="button button__main">
-                        <div className="inner">try it</div>
+                        <div className="inner" onClick={this.updateChar}>try it</div>
                     </button>
                     <img src={mjolnir} alt="mjolnir" className="randomchar__decoration"/>
                 </div>
