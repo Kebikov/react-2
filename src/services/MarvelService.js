@@ -21,12 +21,21 @@ class MarvelService {
     }
 
     _transformCharacter = (char) => {
+        if(!char.description) char.description = "На данный момент описания нет...";
+        if(char.description.length > 50) {
+            let str = char.description.slice(0, 200) + '...'; 
+            char.description = str;
+        }
+
+        char.cover = char.thumbnail.path.includes('image_not_available') ? true : false;
+        
         return {
             name: char.name,
             description: char.description,
             thumbnail: char.thumbnail.path + '.' + char.thumbnail.extension,
             homepage: char.urls[0].url,
-            wiki: char.urls[1].url
+            wiki: char.urls[1].url,
+            cover: char.cover
         }
     }
 
