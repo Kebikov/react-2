@@ -1,11 +1,12 @@
 import './charList.scss';
-import abyss from '../../resources/img/abyss.jpg';
 import MarvelService from '../../services/MarvelService';
+import Spinner from '../spinner/spinner';
 import { Component } from 'react';
 
 
 class CharList extends Component {
     state = {
+        loading: true
     }
 
     marvelService = new MarvelService();
@@ -13,7 +14,8 @@ class CharList extends Component {
     infoChars = () => {
         this.marvelService.getAllCharacters()
         .then(item => {
-            this.setState({info: item});
+            this.setState({info: item,
+            loading: false});
         });
     }
 
@@ -22,14 +24,33 @@ class CharList extends Component {
         this.infoChars();
     }
 
-    render() {
-        const {info} = this.state;
-        const content = info ? <ElemAllCart obj={info}/> : null;
+    elemAllCart = (arr) => {
+        const items = arr.map(item => {
+        const styleObj = item.cover ? 'contain' : 'cover';
+            return (
+                    <li className="char__item" key={item.id}>
+                        <img src={item.thumbnail} alt={item.name} style={{objectFit: styleObj}}/>
+                        <div className="char__name">{item.name}</div>
+                    </li>
+            )
+        });
+    
+        return (
+                <>
+                    {items}
+                </>
+        )
+    }
 
+    render() {
+        const {info, loading} = this.state;
+        const content = info ? this.elemAllCart(info) : null;
+        const spiner = loading ? <Spinner/> : null;
         return (
             <div className="char__list">
                 <ul className="char__grid">
                     {content}
+                    {spiner}
                 </ul>
                 <button className="button button__main button__long">
                     <div className="inner">load more</div>
@@ -38,31 +59,5 @@ class CharList extends Component {
         )
     }
 }
-
-const ElemAllCart = ({obj}) => {
-
-    let i = 0;
-    const arr = obj.map(item => {
-        i++;
-        return <ElemCart key={i} name={item.name} img={item.thumbnail}/>
-    });
-
-        return (
-            <>
-                {arr}
-            </>
-        )
-}
-
-const ElemCart = ({name, img}) => {
-    return (
-        <>
-        <li className="char__item">
-            <img src={img} alt="abyss"/>
-            <div className="char__name">{name}</div>
-        </li>
-    </>
-    )
-};
 
 export default CharList;
