@@ -5,65 +5,31 @@ import { Component } from 'react';
 
 
 class CharList extends Component {
+    state = {
+    }
 
     marvelService = new MarvelService();
 
     infoChars = () => {
         this.marvelService.getAllCharacters()
-        .then(this.all);
+        .then(item => {
+            this.setState({info: item});
+        });
     }
+
 
     componentDidMount () {
         this.infoChars();
     }
 
-    all = (item) => {
-        return <ElemCart item={item}/>
-    }
-
-
     render() {
-        //console.log(this.all);
+        const {info} = this.state;
+        const content = info ? <ElemAllCart obj={info}/> : null;
+
         return (
             <div className="char__list">
-                <ElemCart/>
                 <ul className="char__grid">
-                    <li className="char__item">
-                        <img src={abyss} alt="abyss"/>
-                        <div className="char__name">Abyss</div>
-                    </li>
-                    <li className="char__item char__item_selected">
-                        <img src={abyss} alt="abyss"/>
-                        <div className="char__name">Abyss</div>
-                    </li>
-                    <li className="char__item">
-                        <img src={abyss} alt="abyss"/>
-                        <div className="char__name">Abyss</div>
-                    </li>
-                    <li className="char__item">
-                        <img src={abyss} alt="abyss"/>
-                        <div className="char__name">Abyss</div>
-                    </li>
-                    <li className="char__item">
-                        <img src={abyss} alt="abyss"/>
-                        <div className="char__name">Abyss</div>
-                    </li>
-                    <li className="char__item">
-                        <img src={abyss} alt="abyss"/>
-                        <div className="char__name">Abyss</div>
-                    </li>
-                    <li className="char__item">
-                        <img src={abyss} alt="abyss"/>
-                        <div className="char__name">Abyss</div>
-                    </li>
-                    <li className="char__item">
-                        <img src={abyss} alt="abyss"/>
-                        <div className="char__name">Abyss</div>
-                    </li>
-                    <li className="char__item">
-                        <img src={abyss} alt="abyss"/>
-                        <div className="char__name">Abyss</div>
-                    </li>
+                    {content}
                 </ul>
                 <button className="button button__main button__long">
                     <div className="inner">load more</div>
@@ -73,12 +39,27 @@ class CharList extends Component {
     }
 }
 
-const ElemCart = () => {
+const ElemAllCart = ({obj}) => {
+
+    let i = 0;
+    const arr = obj.map(item => {
+        i++;
+        return <ElemCart key={i} name={item.name} img={item.thumbnail}/>
+    });
+
+        return (
+            <>
+                {arr}
+            </>
+        )
+}
+
+const ElemCart = ({name, img}) => {
     return (
         <>
         <li className="char__item">
-            <img src={abyss} alt="abyss"/>
-            <div className="char__name">Abyss</div>
+            <img src={img} alt="abyss"/>
+            <div className="char__name">{name}</div>
         </li>
     </>
     )
