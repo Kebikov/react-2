@@ -5,8 +5,11 @@ import { Component } from 'react';
 
 
 class CharList extends Component {
-    state = {
-        loading: true
+    constructor (props) {
+        super(props);
+        this.state = {
+            loading: true
+        }
     }
 
     marvelService = new MarvelService();
@@ -24,11 +27,17 @@ class CharList extends Component {
         this.infoChars();
     }
 
+
     elemAllCart = (arr) => {
         const items = arr.map(item => {
         const styleObj = item.cover ? 'contain' : 'cover';
+        const {onCharSelected} =this.props;
+
             return (
-                    <li className="char__item" key={item.id}>
+                    <li 
+                        className="char__item" 
+                        key={item.id}
+                        onClick={() => onCharSelected(item.id)}>
                         <img src={item.thumbnail} alt={item.name} style={{objectFit: styleObj}}/>
                         <div className="char__name">{item.name}</div>
                     </li>
@@ -46,6 +55,7 @@ class CharList extends Component {
         const {info, loading} = this.state;
         const content = info ? this.elemAllCart(info) : null;
         const spiner = loading ? <Spinner/> : null;
+
         return (
             <div className="char__list">
                 <ul className="char__grid">
