@@ -17,8 +17,10 @@ class CharList extends Component {
     infoChars = () => {
         this.marvelService.getAllCharacters()
         .then(item => {
-            this.setState({info: item,
-            loading: false});
+            this.setState({
+                info: item,
+                loading: false
+            });
         });
     }
 
