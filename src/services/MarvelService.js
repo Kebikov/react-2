@@ -27,7 +27,7 @@ class MarvelService {
             let str = char.description.slice(0, 200) + '...'; 
             char.description = str;
         }
-
+        
         char.cover = char.thumbnail.path.includes('image_not_available') ? true : false;
         
         return {
@@ -37,7 +37,8 @@ class MarvelService {
             homepage: char.urls[0].url,
             wiki: char.urls[1].url,
             cover: char.cover,
-            id: char.id
+            id: char.id,
+            comics: char.comics.items
         }
     }
 
