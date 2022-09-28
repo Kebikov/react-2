@@ -5,30 +5,48 @@ import { Component } from 'react';
 
 
 class CharList extends Component {
-    constructor (props) {
-        super(props);
-        this.state = {
-            loading: true
-        }
+    state = {
+        charList: [],
+        loading: true,
+        error: false,
+        newItemLoading: false
     }
-
+    
     marvelService = new MarvelService();
 
-    infoChars = () => {
-        this.marvelService.getAllCharacters()
-        .then(item => {
-            this.setState({
-                info: item,
-                loading: false
-            });
+    onCharListLoaded = (newCharList) => {
+        this.setState(({charList}) => ({
+            charList: [...charList, ...newCharList],
+            loading: false,
+            newItemLoading: false
+        }));
+    }
+
+    onCharListLoading = () => {
+        this.setState({newItemLoading: true});
+    }
+
+    onError = () => {
+        this.setState({
+            loading: false,
+            error: true
         });
     }
 
-
     componentDidMount () {
-        this.infoChars();
+        this.onRequest();
     }
 
+    onRequest = (offset) => {
+        this.onCharListLoading();
+        this.marvelService.getAllCharacters(offset)
+        .then(this.onCharListLoaded)
+        .catch(this.onError);
+    }
+
+    onCharLoading = () => {
+        this.setState({loading: true});
+    }
 
     elemAllCart = (arr) => {
         const items = arr.map(item => {
@@ -53,9 +71,10 @@ class CharList extends Component {
         )
     }
 
+    //= render() 
     render() {
-        const {info, loading} = this.state;
-        const content = info ? this.elemAllCart(info) : null;
+        const {char, loading} = this.state;
+        const content = char ? this.elemAllCart(char) : null;
         const spiner = loading ? <Spinner/> : null;
 
         return (
@@ -65,7 +84,9 @@ class CharList extends Component {
                     {spiner}
                 </ul>
                 <button className="button button__main button__long">
-                    <div className="inner">load more</div>
+                    <div
+                        onClick={this.onRequest}
+                        className="inner">load more</div>
                 </button>
             </div>
         )

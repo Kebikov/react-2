@@ -46,10 +46,6 @@ class RandomChar extends Component {
         this.updateChar();
     }
 
-    componentWillUnmount () {
-        clearInterval(this.timerId);
-    }
-
 render () {
     const {char, loading, error} = this.state;
     const errorMessage = error ? <ErrorMessage/> : null;
