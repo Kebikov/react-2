@@ -11,16 +11,14 @@ class CharList extends Component {
         error: false,
         newItemLoading: false
     }
-    
-    marvelService = new MarvelService();
 
-    onCharListLoaded = (newCharList) => {
-        this.setState(({charList}) => ({
-            charList: [...charList, ...newCharList],
-            loading: false,
-            newItemLoading: false
-        }));
+    //= HOOK 
+    componentDidMount () {
+        this.onRequest();
     }
+    
+    //= CODE 
+    marvelService = new MarvelService();
 
     onCharListLoading = () => {
         this.setState({newItemLoading: true});
@@ -33,8 +31,12 @@ class CharList extends Component {
         });
     }
 
-    componentDidMount () {
-        this.onRequest();
+    onCharListLoaded = (newCharList) => {
+        this.setState(({charList}) => ({
+            charList: [...charList, ...newCharList],
+            loading: false,
+            newItemLoading: false
+        }));
     }
 
     onRequest = (offset) => {
@@ -71,10 +73,10 @@ class CharList extends Component {
         )
     }
 
-    //= render() 
+    //= RENDER() 
     render() {
-        const {char, loading} = this.state;
-        const content = char ? this.elemAllCart(char) : null;
+        const {charList, loading} = this.state;
+        const content = charList ? this.elemAllCart(charList) : null;
         const spiner = loading ? <Spinner/> : null;
 
         return (
