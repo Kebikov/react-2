@@ -6,6 +6,14 @@ import CharInfo from "../charInfo/CharInfo";
 import decoration from '../../resources/img/vision.png';
 import ErrorBoundary from "../errorBoundary/ErrorBoundary";
 
+const MyDiv = (props) => {
+    return (
+        <div style={{border: '2px solid ' + props.color}}>
+            {props.children}
+        </div>
+    )
+}
+
 
 class App extends Component {
     state = {
@@ -20,6 +28,9 @@ class App extends Component {
         return (
             <div className="app">
                 <AppHeader/>
+                <MyDiv color={'green'}>
+                    <h1>Hello!</h1>
+                </MyDiv>
                 <main>
                     <RandomChar/>
                     <div className="char__content">
@@ -36,6 +47,7 @@ class App extends Component {
         )
     }
 }
+
 
 export default App;
 
