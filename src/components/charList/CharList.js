@@ -2,83 +2,84 @@ import './charList.scss';
 import MarvelService from '../../services/MarvelService';
 import Spinner from '../spinner/spinner';
 import PropTypes from 'prop-types';
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 
 
-class CharList extends Component {
-    state = {
-        charList: [],
-        loading: true,
-        error: false,
-        newItemLoading: false,
-        offset: 238,
-        charEnded:false,
-    }
+const  CharList = (props) => {
+
+    const [charList, setCharList] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
+    const [newItemLoading, setNewItemLoading] = useState(false);
+    const [offset, setOffset] = useState(238);
+    const [charEnded, setCharEnded] = useState(false);
 
     //= HOOK 
-    componentDidMount () {
-        this.onRequest();
-        window.addEventListener('scroll', () => {
-            if(document.documentElement.clientHeight + window.scrollY >= document.documentElement.scrollHeight && window.scrollY > 1) {
-                this.onRequest(this.state.offset);
-            } 
-        });
-    }
+    useEffect(() => { 
+        onRequest();
+        function scroll() {
+            console.log('1', document.documentElement.clientHeight + window.scrollY);
+            console.log('2', document.documentElement.scrollHeight);
+                if(document.documentElement.clientHeight + window.scrollY + 1 >= document.documentElement.scrollHeight && window.scrollY > 1) {
+                    console.log('загрузка...');
+                    onRequest(offset);
+                } 
+        }
+        window.addEventListener('scroll', scroll);
+
+        return () => {
+            window.removeEventListener('scroll', scroll);
+        }
+    }, []);
+    
     
     //= CODE 
-    marvelService = new MarvelService();
+    const marvelService = new MarvelService();
 
-    onCharListLoading = () => {
-        this.setState({
-            newItemLoading: true
-        });
+    const onCharListLoading = () => {
+        setNewItemLoading(true);
     }
 
-    onError = () => {
-        this.setState({
-            loading: false,
-            error: true
-        });
+    const onError = () => {
+        setLoading(false);
+        setError(true);
     }
 
-    onCharListLoaded = (newCharList) => {
+    const onCharListLoaded = (newCharList) => {
         let ended = false;
         if(newCharList.length < 9) {
             ended = true;
         }
 
-        this.onCharLoading();
-        this.setState(({charList, offset}) => ({
-            charList: [...charList, ...newCharList],
-            loading: false,
-            newItemLoading: false,
-            offset: offset + 9,
-            charEnded: ended
-        }));
+        onCharLoading();
+
+        setCharList([...charList, ...newCharList]);
+        setLoading(false);
+        setNewItemLoading(false);
+        setOffset(offset + 9);
+        setCharEnded(ended);
     }
 
-    onRequest = (offset) => {
-        this.onCharListLoading();
-        this.marvelService.getAllCharacters(offset)
-        .then(this.onCharListLoaded)
-        .catch(this.onError);
+    const onRequest = (offset) => {
+        onCharListLoading();
+        marvelService.getAllCharacters(offset)
+        .then(onCharListLoaded)
+        .catch(onError);
     }
 
-    onCharLoading = () => {
-        this.setState({
-            loading: true
-        });
+    const onCharLoading = () => {
+        setLoading(true);
     }
     
 
-    elemAllCart = (arr) => {
+    const elemAllCart = (arr) => {
         const items = arr.map(item => {
             const styleObj = item.cover ? 'contain' : 'cover';
-            const {onCharSelected} =this.props;
+            const {onCharSelected} = props;
 
             return (
                     <li
-                    className={(this.props.charId === item.id) ? 'char__item char__item_selected' : 'char__item'}
+                    className={(props.charId === item.id) ? 'char__item char__item_selected' : 'char__item'}
                     key={item.id}
                     onClick={(e) => onCharSelected(item.id)}>
                         <img src={item.thumbnail} alt={item.name} style={{objectFit: styleObj}}/>
@@ -94,10 +95,7 @@ class CharList extends Component {
         )
     }
 
-    //= RENDER() 
-    render() {
-        const {charList, loading, offset, newItemLoading, charEnded} = this.state;
-        const content = charList ? this.elemAllCart(charList) : null;
+        const content = charList ? elemAllCart(charList) : null;
         const spiner = loading ? <Spinner/> : null;
 
         return (
@@ -109,13 +107,12 @@ class CharList extends Component {
                 <button
                     style={{display: charEnded ? 'none' : 'block'}}
                     disabled={newItemLoading}
-                    onClick={() => this.onRequest(offset)}
+                    onClick={() => onRequest(offset)}
                     className="button button__main button__long">
                     <div className="inner">load more</div>
                 </button>
             </div>
         )
-    }
 }
 
 CharList.propTypes = {
