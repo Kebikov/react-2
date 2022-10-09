@@ -12,7 +12,7 @@ class CharList extends Component {
         error: false,
         newItemLoading: false,
         offset: 238,
-        charEnded:false
+        charEnded:false,
     }
 
     //= HOOK 
@@ -69,17 +69,18 @@ class CharList extends Component {
             loading: true
         });
     }
+    
 
     elemAllCart = (arr) => {
         const items = arr.map(item => {
-        const styleObj = item.cover ? 'contain' : 'cover';
-        const {onCharSelected} =this.props;
+            const styleObj = item.cover ? 'contain' : 'cover';
+            const {onCharSelected} =this.props;
 
             return (
-                    <li 
-                        className="char__item" 
-                        key={item.id}
-                        onClick={() => onCharSelected(item.id)}>
+                    <li
+                    className={(this.props.charId === item.id) ? 'char__item char__item_selected' : 'char__item'}
+                    key={item.id}
+                    onClick={(e) => onCharSelected(item.id)}>
                         <img src={item.thumbnail} alt={item.name} style={{objectFit: styleObj}}/>
                         <div className="char__name">{item.name}</div>
                     </li>
