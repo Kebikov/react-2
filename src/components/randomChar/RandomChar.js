@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import './randomChar.scss';
 import mjolnir from '../../resources/img/mjolnir.png';
-import MarvelService from '../../services/MarvelService';
+import useMarvelService from '../../services/MarvelService';
 import Spinner from '../spinner/spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 
@@ -16,7 +16,7 @@ const RandomChar = (props) => {
         updateChar();
     },[]);
 
-    const marvelService = new MarvelService();
+    const marvelService = useMarvelService();
 
     const onCharLoaded = (char) => {
         setChar(char);

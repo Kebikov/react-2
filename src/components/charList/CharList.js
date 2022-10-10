@@ -1,5 +1,5 @@
 import './charList.scss';
-import MarvelService from '../../services/MarvelService';
+import useMarvelService from '../../services/MarvelService';
 import Spinner from '../spinner/spinner';
 import PropTypes from 'prop-types';
 import ErrorMessage from '../errorMessage/ErrorMessage';
@@ -22,7 +22,7 @@ const  CharList = (props) => {
     }, []);
 
     //= CODE 
-    const marvelService = new MarvelService();
+    const marvelService = useMarvelService();
 
     const onCharListLoading = () => {
         setNewItemLoading(true);
