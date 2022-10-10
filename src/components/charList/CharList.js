@@ -2,6 +2,7 @@ import './charList.scss';
 import MarvelService from '../../services/MarvelService';
 import Spinner from '../spinner/spinner';
 import PropTypes from 'prop-types';
+import ErrorMessage from '../errorMessage/ErrorMessage';
 import { useState, useEffect } from 'react';
 
 
@@ -14,25 +15,12 @@ const  CharList = (props) => {
     const [offset, setOffset] = useState(238);
     const [charEnded, setCharEnded] = useState(false);
 
-    //= HOOK 
-    useEffect(() => { 
-        onRequest();
-        function scroll() {
-            console.log('1', document.documentElement.clientHeight + window.scrollY);
-            console.log('2', document.documentElement.scrollHeight);
-                if(document.documentElement.clientHeight + window.scrollY + 1 >= document.documentElement.scrollHeight && window.scrollY > 1) {
-                    console.log('загрузка...');
-                    onRequest(offset);
-                } 
-        }
-        window.addEventListener('scroll', scroll);
 
-        return () => {
-            window.removeEventListener('scroll', scroll);
-        }
+    //= HOOK 
+    useEffect(() => {
+        onRequest();
     }, []);
-    
-    
+
     //= CODE 
     const marvelService = new MarvelService();
 
@@ -51,18 +39,16 @@ const  CharList = (props) => {
             ended = true;
         }
 
-        onCharLoading();
-
-        setCharList([...charList, ...newCharList]);
+        setCharList(charList => [...charList, ...newCharList]);
         setLoading(false);
-        setNewItemLoading(false);
-        setOffset(offset + 9);
+        setNewItemLoading(newItemLoading => false);
+        setOffset(offset => offset + 9);
         setCharEnded(ended);
     }
 
-    const onRequest = (offset) => {
+    const onRequest = (off) => {
         onCharListLoading();
-        marvelService.getAllCharacters(offset)
+        marvelService.getAllCharacters(off)
         .then(onCharListLoaded)
         .catch(onError);
     }
@@ -95,24 +81,28 @@ const  CharList = (props) => {
         )
     }
 
-        const content = charList ? elemAllCart(charList) : null;
-        const spiner = loading ? <Spinner/> : null;
+    const items = elemAllCart(charList);
 
-        return (
-            <div className="char__list">
-                <ul className="char__grid">
-                    {content}
-                    {spiner}
-                </ul>
-                <button
-                    style={{display: charEnded ? 'none' : 'block'}}
-                    disabled={newItemLoading}
-                    onClick={() => onRequest(offset)}
-                    className="button button__main button__long">
-                    <div className="inner">load more</div>
-                </button>
-            </div>
-        )
+    const errorMsg = error ? <ErrorMessage/> : null;
+    const content = !(loading || error) ? items : null;
+    const spiner = loading ? <Spinner/> : null;
+
+    return (
+        <div className="char__list">
+            <ul className="char__grid">
+                {errorMsg}
+                {content}
+                {spiner}
+            </ul>
+            <button
+                style={{display: charEnded ? 'none' : 'block'}}
+                disabled={newItemLoading}
+                onClick={() => onRequest(offset)}
+                className="button button__main button__long">
+                <div className="inner">load more</div>
+            </button>
+        </div>
+    )
 }
 
 CharList.propTypes = {

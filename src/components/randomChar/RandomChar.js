@@ -1,53 +1,43 @@
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import './randomChar.scss';
 import mjolnir from '../../resources/img/mjolnir.png';
 import MarvelService from '../../services/MarvelService';
 import Spinner from '../spinner/spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 
-class RandomChar extends Component {
-    state = {
-        char: {},
-        loading: true,
-        error: false,
-        cover: true
+const RandomChar = (props) => {
+
+    const [char, setChar] = useState({});
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
+    const [cover, setCover] = useState(true);
+
+    useEffect(() => {
+        updateChar();
+    },[]);
+
+    const marvelService = new MarvelService();
+
+    const onCharLoaded = (char) => {
+        setChar(char);
+        setLoading(false);
     }
 
-    marvelService = new MarvelService();
-
-    onCharLoaded = (char) => {
-        this.setState({ 
-            char: char,
-            loading: false
-        });
-        // или this.setState({char})
+    const onError = () => {
+        setLoading(false);
+        setError(true);
     }
 
-    onError = () => {
-        this.setState({
-            loading: false,
-            error: true
-        });
-    }
-
-    updateChar = () => {
-        this.setState({
-            loading: true,
-            error: false
-        })
+    const updateChar = () => {
+        setLoading(true);
+        setError(false);
         const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
-        this.marvelService
+        marvelService
         .getCharacters(id)
-        .then(this.onCharLoaded)
-        .catch(this.onError);
+        .then(onCharLoaded)
+        .catch(onError);
     }
 
-    componentDidMount () {
-        this.updateChar();
-    }
-
-render () {
-    const {char, loading, error} = this.state;
     const errorMessage = error ? <ErrorMessage/> : null;
     const  spinner = loading ? <Spinner/> : null;
     const content = !(loading || error) ? <View char={char}/> : null;
@@ -66,13 +56,12 @@ render () {
                     Or choose another one
                 </p>
                 <button className="button button__main">
-                    <div className="inner" onClick={this.updateChar}>try it</div>
+                    <div className="inner" onClick={updateChar}>try it</div>
                 </button>
                 <img src={mjolnir} alt="mjolnir" className="randomchar__decoration"/>
             </div>
         </div>
     )
-}
 }
 
 const View = ({char}) => {
