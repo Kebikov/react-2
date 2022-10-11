@@ -8,15 +8,15 @@ import ErrorMessage from '../errorMessage/ErrorMessage';
 const RandomChar = (props) => {
 
     const [char, setChar] = useState({});
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
+    // const [loading, setLoading] = useState(true);
+    // const [error, setError] = useState(false);
     const [cover, setCover] = useState(true);
 
     useEffect(() => {
         updateChar();
     },[]);
 
-    const marvelService = useMarvelService();
+    const {loading, error, getCharacters} = useMarvelService();
 
     const onCharLoaded = (char) => {
         setChar(char);
