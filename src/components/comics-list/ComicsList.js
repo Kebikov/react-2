@@ -1,11 +1,13 @@
-import './charList.scss';
+import './comics-list.scss';
+import '../charList/charList.scss';
 import useMarvelService from '../../services/MarvelService';
 import Spinner from '../spinner/spinner';
-import PropTypes from 'prop-types';
 import ErrorMessage from '../errorMessage/ErrorMessage';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
+import avengers from '../../resources/img/Avengers.png';
+import avengersLogo from '../../resources/img/Avengers_logo.png';
 
-const  CharList = (props) => {
+const ComicsList = (props) => {
     const [charList, setCharList] = useState([]);
     const [newItemLoading, setNewItemLoading] = useState(false);
     const [offset, setOffset] = useState(238);
@@ -22,19 +24,18 @@ const  CharList = (props) => {
     
     const onRequest = (off, initial) => {
         initial ? setNewItemLoading(false) : setNewItemLoading(true);
-        getAllCharacters(off)
+        getAllCharacters(off, 'comics', 8)
         .then(onCharListLoaded);
     }
 
     const onCharListLoaded = (newCharList) => {
         let ended = false;
-        if(newCharList.length < 9) {
+        if(newCharList.length < 8) {
             ended = true;
         }
         setCharList(charList => [...charList, ...newCharList]);
-        //lod-false
         setNewItemLoading(newItemLoading => false);
-        setOffset(offset => offset + 9);
+        setOffset(offset => offset + 8);
         setCharEnded(() => ended);
     }
 
@@ -45,11 +46,12 @@ const  CharList = (props) => {
 
             return (
                     <li
-                    className={(props.charId === item.id) ? 'char__item char__item_selected' : 'char__item'}
+                    className={(props.charId === item.id) ? 'char__item item-hi char__item_selected' : 'char__item item-hi'}
                     key={item.id}
                     onClick={(e) => onCharSelected(item.id)}>
-                        <img src={item.thumbnail} alt={item.name} style={{objectFit: styleObj}}/>
-                        <div className="char__name">{item.name}</div>
+                        <img src={item.thumbnail} alt={item.name} style={{objectFit: styleObj, height: '270px'}}/>
+                        <h4>{item.title}</h4>
+                        <h4 className='mt-10'>{`${item.price}\$`}</h4>
                     </li>
             )
         });
@@ -66,8 +68,10 @@ const  CharList = (props) => {
     const spiner = loading && !newItemLoading ? <Spinner/> : null;
     //= RENDER 
     return (
+        <>
+        {hederComics}
         <div className="char__list">
-            <ul className="char__grid">
+            <ul className="char__grid four-row">
                 {errorMsg}
                 {items}
                 {spiner}
@@ -80,11 +84,18 @@ const  CharList = (props) => {
                 <div className="inner">load more</div>
             </button>
         </div>
+        </>
     )
 }
 
-CharList.propTypes = {
-    onCharSelected: PropTypes.func.isRequired
-} 
+const hederComics = (
+    <div className="heder-comics">
+        <div className="heder-comics__body">
+            <img className="heder-comics__img-left" src={avengers} alt="" />
+            <h2>New comics every week!<br/>Stay tuned!</h2>
+            <img className="heder-comics__img-right" src={avengersLogo} alt="" />
+        </div>
+    </div>
+);
 
-export default CharList;
+export default ComicsList;

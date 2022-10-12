@@ -1,0 +1,46 @@
+.four-row {
+    grid-template-columns: repeat(4, 250px);
+    margin: 0 auto;
+    column-gap: 50px;
+}
+
+.char__list {
+    margin: 40px 0px 0px 0px;
+    display: flex;
+    flex-direction: column;
+    //justify-content: center;
+}
+
+.heder-comics {
+
+    // .heder-comics__body
+
+    &__body {
+        background-color: rgb(54, 49, 49);
+        color: #fff;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    // .heder-comics__img-left
+
+    &__img-left {
+        margin-left: 20px;
+    }
+
+    // .heder-comics__img-right
+
+    &__img-right {
+        margin-right: 20px;
+    }
+}
+
+.item-hi{
+    height: 400px;
+    background-color: #fff;
+}
+
+.mt-10{
+    margin-top: 10px;
+}

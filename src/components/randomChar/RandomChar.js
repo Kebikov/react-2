@@ -12,13 +12,14 @@ const RandomChar = (props) => {
         updateChar();
     },[]);
 
-    const {loading, error, getCharacters} = useMarvelService();
+    const {loading, error, getCharacters, clearError} = useMarvelService();
 
     const onCharLoaded = (char) => {
         setChar(char);
     }
 
     const updateChar = () => {
+        clearError();
         const id = Math.floor(Math.random() * (1011400 - 1011000)) + 1011000;
         getCharacters(id)
         .then(onCharLoaded);
@@ -42,7 +43,9 @@ const RandomChar = (props) => {
                     Or choose another one
                 </p>
                 <button className="button button__main">
-                    <div className="inner" onClick={updateChar}>try it</div>
+                    <div 
+                        className="inner" 
+                        onClick={updateChar}>try it</div>
                 </button>
                 <img src={mjolnir} alt="mjolnir" className="randomchar__decoration"/>
             </div>

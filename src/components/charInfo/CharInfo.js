@@ -5,51 +5,37 @@ import Spinner from '../spinner/spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import Skeleton from '../skeleton/Skeleton';
 
+
 const CharInfo =(props) => {
-
     const [char, setChar] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(false);
 
+    //= HOOK 
     useEffect(()=> {
         updateChar();
     },[props.charId]);
 
-    const marvelService = useMarvelService();
+    //= CODE 
+    const {loading, error, getCharacters, clearError} = useMarvelService();
 
     const updateChar = () => {
+        clearError();
         const {charId} = props;
         if(!charId) {
             return
         }
-
-        onCharLoading();
-        
-        marvelService
-            .getCharacters(charId)
-            .then(onCharLoaded)
-            .catch(onError);
+        getCharacters(charId)
+        .then(onCharLoaded);
     }
 
     const onCharLoaded = (char) => {
         setChar(char);
-        setLoading(false);
     }
 
-    const onCharLoading = () => {
-        setLoading(true);
-    }
-
-    const onError = () => {
-        setLoading(false);
-        setError(true);
-    }
-
-        const skeleton = char || loading || error ? null : <Skeleton/>
-        const errorMessage = error ? <ErrorMessage/> : null;
-        const  spinner = loading ? <Spinner/> : null;
-        const content = !(loading || error || !char) ? <View char={char}/> : null;
-
+    const skeleton = char || loading || error ? null : <Skeleton/>
+    const errorMessage = error ? <ErrorMessage/> : null;
+    const  spinner = loading ? <Spinner/> : null;
+    const content = !(loading || error || !char) ? <View char={char}/> : null;
+    //= RENDER 
         return (
             <div className="char__info">
                 {errorMessage}
