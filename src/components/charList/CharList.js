@@ -3,34 +3,27 @@ import useMarvelService from '../../services/MarvelService';
 import Spinner from '../spinner/spinner';
 import PropTypes from 'prop-types';
 import ErrorMessage from '../errorMessage/ErrorMessage';
-import { useState, useEffect } from 'react';
-import useHttp from '../hooks/http.hook';
+import { useState, useEffect, useRef } from 'react';
 
 const  CharList = (props) => {
-
     const [charList, setCharList] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
     const [newItemLoading, setNewItemLoading] = useState(false);
     const [offset, setOffset] = useState(238);
     const [charEnded, setCharEnded] = useState(false);
-
 
     //= HOOK 
     useEffect(() => {
         onRequest();
     }, []);
 
+
     //= CODE 
-    const marvelService = useMarvelService();
-
-    const onCharListLoading = () => {
-        setNewItemLoading(true);
-    }
-
-    const onError = () => {
-        setLoading(false);
-        setError(true);
+    const {loading, error, getAllCharacters} = useMarvelService();
+    //= FN 
+    const onRequest = (off, initial) => {
+        initial ? setNewItemLoading(false) : setNewItemLoading(true);
+        getAllCharacters(off)
+        .then(onCharListLoaded);
     }
 
     const onCharListLoaded = (newCharList) => {
@@ -38,25 +31,12 @@ const  CharList = (props) => {
         if(newCharList.length < 9) {
             ended = true;
         }
-
         setCharList(charList => [...charList, ...newCharList]);
-        setLoading(false);
+        //lod-false
         setNewItemLoading(newItemLoading => false);
         setOffset(offset => offset + 9);
-        setCharEnded(ended);
+        setCharEnded(() => ended);
     }
-
-    const onRequest = (off) => {
-        onCharListLoading();
-        marvelService.getAllCharacters(off)
-        .then(onCharListLoaded)
-        .catch(onError);
-    }
-
-    const onCharLoading = () => {
-        setLoading(true);
-    }
-    
 
     const elemAllCart = (arr) => {
         const items = arr.map(item => {
@@ -82,16 +62,14 @@ const  CharList = (props) => {
     }
 
     const items = elemAllCart(charList);
-
     const errorMsg = error ? <ErrorMessage/> : null;
-    const content = !(loading || error) ? items : null;
-    const spiner = loading ? <Spinner/> : null;
+    const spiner = loading && !newItemLoading ? <Spinner/> : null;
 
     return (
         <div className="char__list">
             <ul className="char__grid">
                 {errorMsg}
-                {content}
+                {items}
                 {spiner}
             </ul>
             <button

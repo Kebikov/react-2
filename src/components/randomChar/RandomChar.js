@@ -6,11 +6,7 @@ import Spinner from '../spinner/spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 
 const RandomChar = (props) => {
-
     const [char, setChar] = useState({});
-    // const [loading, setLoading] = useState(true);
-    // const [error, setError] = useState(false);
-    const [cover, setCover] = useState(true);
 
     useEffect(() => {
         updateChar();
@@ -20,22 +16,12 @@ const RandomChar = (props) => {
 
     const onCharLoaded = (char) => {
         setChar(char);
-        setLoading(false);
-    }
-
-    const onError = () => {
-        setLoading(false);
-        setError(true);
     }
 
     const updateChar = () => {
-        setLoading(true);
-        setError(false);
-        const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
-        marvelService
-        .getCharacters(id)
-        .then(onCharLoaded)
-        .catch(onError);
+        const id = Math.floor(Math.random() * (1011400 - 1011000)) + 1011000;
+        getCharacters(id)
+        .then(onCharLoaded);
     }
 
     const errorMessage = error ? <ErrorMessage/> : null;
