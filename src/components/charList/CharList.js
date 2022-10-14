@@ -3,7 +3,7 @@ import useMarvelService from '../../services/MarvelService';
 import Spinner from '../spinner/spinner';
 import PropTypes from 'prop-types';
 import ErrorMessage from '../errorMessage/ErrorMessage';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 
 const  CharList = (props) => {
     const [charList, setCharList] = useState([]);
@@ -15,7 +15,6 @@ const  CharList = (props) => {
     useEffect(() => {
         onRequest(offset, true);
     }, []);
-
 
     //= CODE 
     const {loading, error, getAllCharacters} = useMarvelService();

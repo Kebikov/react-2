@@ -36,7 +36,7 @@ const useMarvelService = () => {
             id: char?.id,
             comics: char?.comics?.items,
             title: char?.title,
-            price: char?.prices[0]?.price
+            price: char?.prices?.price
         }
     }
     return {getAllCharacters, getCharacters, loading, error, clearError}

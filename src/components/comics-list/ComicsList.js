@@ -4,8 +4,7 @@ import useMarvelService from '../../services/MarvelService';
 import Spinner from '../spinner/spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import { useState, useEffect } from 'react';
-import avengers from '../../resources/img/Avengers.png';
-import avengersLogo from '../../resources/img/Avengers_logo.png';
+import nextId from 'react-id-generator';
 
 const ComicsList = (props) => {
     const [charList, setCharList] = useState([]);
@@ -41,15 +40,14 @@ const ComicsList = (props) => {
 
     const elemAllCart = (arr) => {
         const items = arr.map(item => {
-            const styleObj = item.cover ? 'contain' : 'cover';
             const {onCharSelected} = props;
 
             return (
                     <li
-                    className={(props.charId === item.id) ? 'char__item item-hi char__item_selected' : 'char__item item-hi'}
+                    className='item-hi'
                     key={item.id}
                     onClick={(e) => onCharSelected(item.id)}>
-                        <img src={item.thumbnail} alt={item.name} style={{objectFit: styleObj, height: '270px'}}/>
+                        <img src={item.thumbnail} alt={item.name} style={{objectFit: 'cover', height: '270px', width: 'auto'}}/>
                         <h4>{item.title}</h4>
                         <h4 className='mt-10'>{`${item.price}\$`}</h4>
                     </li>
@@ -69,9 +67,8 @@ const ComicsList = (props) => {
     //= RENDER 
     return (
         <>
-        {hederComics}
         <div className="char__list">
-            <ul className="char__grid four-row">
+            <ul className="four-row">
                 {errorMsg}
                 {items}
                 {spiner}
@@ -88,14 +85,5 @@ const ComicsList = (props) => {
     )
 }
 
-const hederComics = (
-    <div className="heder-comics">
-        <div className="heder-comics__body">
-            <img className="heder-comics__img-left" src={avengers} alt="" />
-            <h2>New comics every week!<br/>Stay tuned!</h2>
-            <img className="heder-comics__img-right" src={avengersLogo} alt="" />
-        </div>
-    </div>
-);
 
 export default ComicsList;
