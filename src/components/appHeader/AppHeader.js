@@ -2,6 +2,11 @@ import './appHeader.scss';
 import { Link, NavLink } from 'react-router-dom';
 
 const AppHeader = () => {
+
+    const color = ({isActive}) => {
+        return {color: isActive ? 'red' : 'blue'}
+    }
+
     return (
         <header className="app__header">
             <h1 className="app__title">
@@ -11,9 +16,9 @@ const AppHeader = () => {
             </h1>
             <nav className="app__menu">
                 <ul>
-                    <li><NavLink to={'/'} exact activeStyle={{color:'red'}}>Characters</NavLink></li>
+                    <li><NavLink to={'/'} end isActive style={color}>Characters</NavLink></li>
                     /
-                    <li><NavLink to={'/comics'} exact activeClassName='active'>Comics</NavLink></li>
+                    <li><NavLink to={'/comics'} end className={( ({isActive}) => (isActive ? 'active' : null) )}>Comics</NavLink></li>
                 </ul>
             </nav>
         </header>
@@ -21,3 +26,4 @@ const AppHeader = () => {
 }
 
 export default AppHeader;
+

@@ -11,12 +11,8 @@ const  App = () => {
                 <AppHeader/>
                 <main>
                     <Routes>
-                        <Route exact path='/'>
-                            <MainPage/>
-                        </Route>
-                        <Route exact path='/comics'>
-                            <ComicsPage/>
-                        </Route>
+                        <Route path='/' element={<MainPage/>}/>
+                        <Route path='/comics' element={<ComicsPage/>}/>
                     </Routes>
                 </main>
             </div>
