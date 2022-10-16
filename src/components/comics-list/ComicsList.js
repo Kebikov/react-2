@@ -4,7 +4,7 @@ import useMarvelService from '../../services/MarvelService';
 import Spinner from '../spinner/spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import { useState, useEffect } from 'react';
-import nextId from 'react-id-generator';
+import { Link } from 'react-router-dom';
 
 const ComicsList = (props) => {
     const [charList, setCharList] = useState([]);
@@ -45,11 +45,12 @@ const ComicsList = (props) => {
             return (
                     <li
                     className='item-hi'
-                    key={item.id}
-                    onClick={(e) => onCharSelected(item.id)}>
-                        <img src={item.thumbnail} alt={item.name} style={{objectFit: 'cover', height: '270px', width: 'auto'}}/>
-                        <h4>{item.title}</h4>
-                        <h4 className='mt-10'>{`${item.price}\$`}</h4>
+                    key={item.id}>
+                        <Link to={`/comics/${item.id}`}>
+                            <img src={item.thumbnail} alt={item.name} style={{objectFit: 'cover', height: '270px', width: 'auto'}}/>
+                            <h4>{item.title}</h4>
+                            <h4 className='mt-10'>{`${item.price}\$`}</h4>
+                        </Link>
                     </li>
             )
         });
